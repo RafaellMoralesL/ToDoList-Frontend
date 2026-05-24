@@ -23,12 +23,12 @@ type FormTaskAndGoalProps = {
       e.preventDefault();
       const name = inputRefName.current?.value;
       const description = inputRefDescription.current?.value;
-      const dueDate = inputRefDueDate.current?.value;
-            if (name && description && dueDate) {
+      const duedate = inputRefDueDate.current?.value;
+            if (name && description && duedate) {
               if (isActiveMenu === 'tasks') {
-                addTask({ id: Date.now(), name, description, dueDate });
+                addTask({ _id: Date.now().toString(), name, description, duedate });
               } else {
-                addGoal({ id: Date.now(), name, description, dueDate });
+                addGoal({ _id: Date.now().toString(), name, description, duedate });
               }
 
               if (onAdd) {
@@ -58,7 +58,7 @@ type FormTaskAndGoalProps = {
         </Form.Group>
 
         <Button type="submit" variant="info">
-            Add Goal
+            Add {isActiveMenu === 'tasks' ? 'Task' : 'Goal'}
         </Button>
         
     </Form>
