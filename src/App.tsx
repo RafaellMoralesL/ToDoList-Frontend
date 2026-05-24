@@ -1,5 +1,5 @@
 import './App.scss'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Item from './components/Item/Item';
 import FormTaskAndGoal from './components/Form/Form';
 import  Menu from './components/Menu/Menu';
@@ -8,11 +8,25 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import AddingMobileButton from './components/AddingMobileButton/AddingMobileButton';
 import Modal from 'react-bootstrap/Modal';
+import {useTaskStore, initializeTasks} from './store/taskStore';
+import {useGoalStore, initializeGoals} from './store/goalStore';
+import {useMenuStore} from './store/menuStore';
 
 function App() {
+
+  const tasks = useTaskStore((state) => state.tasks);
+  const goals = useGoalStore((state) => state.goals);
+  const isActiveMenu = useMenuStore((state) => state.menu.active);
+
+  useEffect(() => {
+    initializeGoals();
+    initializeTasks();
+  }, [])
+
   const [showModal, setShowModal] = useState(false);
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+
 
   return (
     <div className="App">
@@ -26,17 +40,19 @@ function App() {
 
       <Col>
             <div className="d-md-none overlapping-div" onClick={handleOpenModal}>
-                   <AddingMobileButton />
+                  <AddingMobileButton />
             </div>
         <Row>
           <div className="scrolling">
-              <Item />
-              <Item />
-              <Item />
-              <Item />
-              <Item />
-              <Item />
-              <Item />
+            {isActiveMenu === 'tasks' ? (
+                      tasks.map((task) => (
+                          <Item key={task._id} {...task} />
+                      ))
+                    ) : (
+                      goals.map((goal) => (
+                          <Item key={goal._id} {...goal} />
+                      ))
+                    )}
             </div>
           </Row>
         </Col>
